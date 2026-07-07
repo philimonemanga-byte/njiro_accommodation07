@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<h2>
+My Rooms
+</h2>
+
+
+<div class="row">
+
+
+{% for room in rooms %}
+
+
+<div class="col-md-4">
+
+
+<div class="card p-3 mb-3">
+
+
+<h5>
+{{ room.title }}
+</h5>
+
+
+<p>
+Price: {{ room.price }}
+</p>
+
+
+<p>
+Location: {{ room.location }}
+</p>
+
+
+<a href="{% url 'room_detail' room.id %}"
+class="btn btn-info">
+
+View
+
+</a>
+
+
+</div>
+
+
+</div>
+<a href="{% url 'delete_room' room.id %}"
+class="btn btn-danger">
+
+Delete
+
+</a>
+
+{% empty %}
+
+
+<p>
+You have not added any rooms yet.
+</p>
+
+
+{% endfor %}
+
+
+</div>
+
+
+{% endblock %}

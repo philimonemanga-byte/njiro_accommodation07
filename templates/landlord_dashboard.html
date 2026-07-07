@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="card p-4">
+
+<h2>
+Landlord Dashboard
+</h2>
+
+<p>
+Welcome {{ user.username }}
+</p>
+
+
+<a href="{% url 'add_room' %}" 
+class="btn btn-primary">
+
+Add New Room
+
+</a>
+
+
+<a href="{% url 'landlord_rooms' %}"
+class="btn btn-success">
+
+My Rooms
+
+</a>
+
+
+</div>
+
+
+{% endblock %}

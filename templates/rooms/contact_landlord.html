@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+
+<h2>
+Contact Landlord
+</h2>
+
+
+<div class="card p-4">
+
+
+<h4>
+{{ room.title }}
+</h4>
+
+
+<form method="POST">
+
+{% csrf_token %}
+
+
+{{ form.as_p }}
+
+
+<button class="btn btn-primary">
+
+Send Message
+
+</button>
+
+
+</form>
+
+
+</div>
+
+
+{% endblock %}
