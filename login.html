@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ingia au Jisajili — KaaNjiro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --forest:#1F4D3A;
+    --forest-dark:#153529;
+    --gold:#D4A24C;
+    --gold-dark:#B0813A;
+    --soil:#B5533C;
+    --cream:#FAF6EE;
+    --sage:#E8EDE4;
+    --ink:#26231F;
+    --ink-soft:#5B584F;
+    --line:#DAD3C2;
+    --white:#FFFFFF;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; min-height:100vh; background:var(--cream); color:var(--ink);
+    font-family:'Inter', sans-serif; font-size:16px;
+  }
+  h1,h2,h3{ font-family:'Space Grotesk', sans-serif; color:var(--forest-dark); margin:0; }
+  .mono{ font-family:'IBM Plex Mono', monospace; }
+  a{ color:inherit; }
+  button{ font-family:inherit; cursor:pointer; }
+  :focus-visible{ outline:3px solid var(--gold); outline-offset:2px; }
+  @media (prefers-reduced-motion: reduce){ *{ animation:none !important; transition:none !important; } }
+
+  .screen{ min-height:100vh; display:grid; grid-template-columns:1fr 1fr; }
+
+  /* -------- Left: brand / route panel -------- */
+  .brand-panel{
+    background:var(--forest); color:var(--cream); padding:48px;
+    display:flex; flex-direction:column; justify-content:space-between; position:relative; overflow:hidden;
+  }
+  .brand-panel::before{
+    content:""; position:absolute; right:-60px; top:-60px; width:260px; height:260px;
+    background:radial-gradient(circle, rgba(212,162,76,0.32), transparent 70%);
+  }
+  .logo{ display:flex; align-items:center; gap:10px; font-weight:700; font-size:1.25rem; position:relative; z-index:1; }
+  .logo-mark{
+    width:34px; height:34px; border-radius:9px;
+    background:linear-gradient(155deg, var(--gold) 55%, var(--cream) 55%);
+    position:relative; flex-shrink:0;
+  }
+  .logo-mark::after{ content:""; position:absolute; inset:9px; border:2px solid var(--forest); border-bottom:none; border-radius:3px 3px 0 0; }
+  .logo a{ color:var(--cream); text-decoration:none; display:flex; align-items:center; gap:10px; }
+
+  .brand-copy{ position:relative; z-index:1; max-width:38ch; }
+  .brand-copy h1{ color:var(--cream); font-size:2.1rem; line-height:1.15; margin-bottom:14px; }
+  .brand-copy p{ color:#CFE0D6; font-size:1rem; }
+
+  .route-path{ position:relative; z-index:1; }
+  .route-line{
+    height:2px; background-image:linear-gradient(to right, var(--gold) 60%, transparent 0%);
+    background-size:10px 2px; background-repeat:repeat-x; margin:12px 0;
+  }
+  .route-stop{ display:flex; align-items:center; gap:10px; font-size:0.92rem; }
+  .route-stop .pin{ width:9px; height:9px; border-radius:50%; background:var(--gold); flex-shrink:0; box-shadow:0 0 0 4px rgba(212,162,76,0.25); }
+  .route-stop.dim{ opacity:.65; }
+  .route-badge{
+    display:inline-block; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.18);
+    padding:8px 14px; border-radius:12px; font-family:'IBM Plex Mono'; font-size:0.82rem; margin-bottom:14px; z-index:1; position:relative;
+  }
+  .route-badge b{ color:var(--gold); }
+
+  /* -------- Right: form panel -------- */
+  .form-panel{ display:flex; align-items:center; justify-content:center; padding:32px; }
+  .form-card{ width:100%; max-width:400px; }
+  .back-link{
+    display:inline-flex; align-items:center; gap:6px; font-size:0.88rem; color:var(--ink-soft);
+    text-decoration:none; margin-bottom:22px;
+  }
+  .back-link:hover{ color:var(--forest-dark); }
+
+  .form-card h2{ font-size:1.5rem; margin-bottom:6px; }
+  .form-sub{ color:var(--ink-soft); font-size:0.92rem; margin-bottom:22px; }
+
+  .tabs{ display:flex; gap:4px; background:var(--sage); padding:4px; border-radius:10px; margin-bottom:22px; }
+  .tab{ flex:1; text-align:center; padding:10px; border:none; background:transparent; border-radius:8px; font-weight:600; color:var(--ink-soft); font-size:0.9rem; }
+  .tab.active{ background:var(--white); color:var(--forest-dark); box-shadow:0 2px 6px rgba(0,0,0,0.06); }
+
+  .role-toggle{ display:flex; gap:10px; margin-bottom:18px; }
+  .role-opt{ flex:1; border:1.5px solid var(--line); border-radius:10px; padding:12px; text-align:center; font-size:0.86rem; background:var(--white); }
+  .role-opt input{ display:none; }
+  .role-opt:has(input:checked){ border-color:var(--forest); background:var(--sage); color:var(--forest-dark); font-weight:600; }
+
+  .field{ margin-bottom:16px; }
+  .field label{ display:block; font-size:0.78rem; font-weight:600; color:var(--ink-soft); margin-bottom:6px; text-transform:uppercase; letter-spacing:.03em; }
+  .field input{
+    width:100%; padding:12px 13px; border-radius:9px; border:1px solid var(--line);
+    background:var(--white); font-family:inherit; font-size:0.95rem; color:var(--ink);
+  }
+  .field input:focus{ border-color:var(--forest); }
+  .field-hint{ font-size:0.8rem; color:var(--ink-soft); margin-top:6px; }
+  .field-error{ font-size:0.8rem; color:var(--soil); margin-top:6px; display:none; }
+  .field.invalid input{ border-color:var(--soil); }
+  .field.invalid .field-error{ display:block; }
+
+  .row-between{ display:flex; justify-content:space-between; align-items:center; margin:2px 0 18px; font-size:0.85rem; }
+  .row-between label{ display:flex; align-items:center; gap:7px; color:var(--ink-soft); }
+  .row-between a{ color:var(--forest-dark); font-weight:600; text-decoration:none; }
+  .row-between a:hover{ text-decoration:underline; }
+
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px; width:100%;
+    padding:13px 22px; border-radius:999px; border:none; font-weight:600; font-size:0.95rem;
+    background:var(--gold); color:var(--forest-dark); transition:transform .15s ease, background .15s ease;
+  }
+  .btn:hover{ background:var(--gold-dark); transform:translateY(-1px); }
+
+  .divider{ display:flex; align-items:center; gap:12px; margin:22px 0; color:var(--ink-soft); font-size:0.82rem; }
+  .divider::before, .divider::after{ content:""; flex:1; height:1px; background:var(--line); }
+
+  .switch-line{ text-align:center; font-size:0.9rem; color:var(--ink-soft); margin-top:6px; }
+  .switch-line button{ background:none; border:none; color:var(--forest-dark); font-weight:600; padding:0; }
+  .switch-line button:hover{ text-decoration:underline; }
+
+  .toast{
+    position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px);
+    background:var(--forest-dark); color:var(--cream); padding:14px 22px; border-radius:999px;
+    font-size:0.9rem; opacity:0; transition:opacity .25s ease, transform .25s ease; z-index:200; pointer-events:none;
+  }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+  @media (max-width: 860px){
+    .screen{ grid-template-columns:1fr; }
+    .brand-panel{ padding:32px 28px; min-height:260px; }
+    .brand-copy h1{ font-size:1.6rem; }
+    .form-panel{ padding:28px 22px 60px; }
+  }
+</style>
+</head>
+<body>
+<div class="screen">
+  <!-- BRAND / CONTEXT PANEL -->
+  <div class="brand-panel">
+    <div class="logo"><a href="index.html"><span class="logo-mark"></span>KaaNjiro</a></div>
+
+    <div class="brand-copy">
+      <h1>Karibu kwenye jukwaa la malazi ya wanafunzi wa IAA, Njiro.</h1>
+      <p>Ingia kutafuta chumba, au jisajili kama mmiliki kuchapisha matangazo yako.</p>
+    </div>
+
+    <div class="route-path">
+      <div class="route-badge">Wastani wa kutembea <b>9 dakika</b> kwenda IAA</div>
+      <div class="route-stop"><span class="pin"></span> Chumba ulichopanga</div>
+      <div class="route-line"></div>
+      <div class="route-stop dim"><span class="pin" style="background:rgba(255,255,255,.5); box-shadow:none;"></span> Njia ya Njiro</div>
+      <div class="route-line"></div>
+      <div class="route-stop"><span class="pin"></span> IAA — Lango kuu</div>
+    </div>
+  </div>
+
+  <!-- FORM PANEL -->
+  <div class="form-panel">
+    <div class="form-card">
+      <a class="back-link" href="index.html">← Rudi KaaNjiro</a>
+
+      <div class="tabs">
+        <button class="tab active" id="tab-login" onclick="switchTab('login')" type="button">Ingia</button>
+        <button class="tab" id="tab-register" onclick="switchTab('register')" type="button">Jisajili</button>
+      </div>
+
+      <h2 id="form-title">Karibu tena</h2>
+      <p class="form-sub" id="form-sub">Ingia kuendelea kutafuta au kusimamia matangazo yako.</p>
+
+      <form id="auth-form" onsubmit="handleAuth(event)" novalidate>
+
+        <div class="role-toggle" id="role-toggle" style="display:none;">
+          <label class="role-opt"><input type="radio" name="role" value="mwanafunzi" checked>Mimi ni Mwanafunzi</label>
+          <label class="role-opt"><input type="radio" name="role" value="mmiliki">Mimi ni Mmiliki wa chumba</label>
+        </div>
+
+        <div class="field" id="field-name" style="display:none;">
+          <label for="a-name">Jina kamili</label>
+          <input id="a-name" placeholder="Mfano: Neema Mushi">
+        </div>
+
+        <div class="field" id="field-contact">
+          <label for="a-contact">Namba ya simu</label>
+          <input id="a-contact" required placeholder="0712 345 678" inputmode="tel">
+          <div class="field-error">Ingiza namba sahihi ya simu, mfano 0712 345 678.</div>
+        </div>
+
+        <div class="field" id="field-pass">
+          <label for="a-pass">Nenosiri</label>
+          <input id="a-pass" type="password" required placeholder="••••••••" minlength="6">
+          <div class="field-hint">Angalau herufi/namba 6.</div>
+          <div class="field-error">Nenosiri linahitaji angalau herufi 6.</div>
+        </div>
+
+        <div class="row-between" id="remember-row">
+          <label><input type="checkbox" id="a-remember"> Nikumbuke</label>
+          <a href="#" onclick="showToast('Kiungo cha kubadilisha nenosiri — haipo kwenye prototype hii'); return false;">Umesahau nenosiri?</a>
+        </div>
+
+        <button class="btn" type="submit" id="auth-submit">Ingia</button>
+      </form>
+
+      <div class="divider">au</div>
+
+      <p class="switch-line" id="switch-line">
+        Huna akaunti? <button type="button" onclick="switchTab('register')">Jisajili sasa</button>
+      </p>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  function switchTab(tab){
+    const isLogin = tab === 'login';
+    document.getElementById('tab-login').classList.toggle('active', isLogin);
+    document.getElementById('tab-register').classList.toggle('active', !isLogin);
+    document.getElementById('role-toggle').style.display = isLogin ? 'none' : 'flex';
+    document.getElementById('field-name').style.display = isLogin ? 'none' : 'block';
+    document.getElementById('remember-row').style.display = isLogin ? 'flex' : 'none';
+    document.getElementById('form-title').textContent = isLogin ? 'Karibu tena' : 'Fungua akaunti mpya';
+    document.getElementById('form-sub').textContent = isLogin
+      ? 'Ingia kuendelea kutafuta au kusimamia matangazo yako.'
+      : 'Jisajili kama mwanafunzi anayetafuta chumba, au kama mmiliki wa chumba.';
+    document.getElementById('auth-submit').textContent = isLogin ? 'Ingia' : 'Jisajili';
+    document.getElementById('switch-line').innerHTML = isLogin
+      ? 'Huna akaunti? <button type="button" onclick="switchTab(\'register\')">Jisajili sasa</button>'
+      : 'Tayari una akaunti? <button type="button" onclick="switchTab(\'login\')">Ingia hapa</button>';
+  }
+
+  function setInvalid(fieldId, invalid){
+    document.getElementById(fieldId).classList.toggle('invalid', invalid);
+  }
+
+  function handleAuth(e){
+    e.preventDefault();
+    const contact = document.getElementById('a-contact').value.trim();
+    const pass = document.getElementById('a-pass').value;
+    const digitsOnly = contact.replace(/[\s-]/g, '');
+    const phoneOk = /^0\d{9}$/.test(digitsOnly) || /^\+255\d{9}$/.test(digitsOnly);
+    const passOk = pass.length >= 6;
+
+    setInvalid('field-contact', !phoneOk);
+    setInvalid('field-pass', !passOk);
+    if(!phoneOk || !passOk) return;
+
+    const isRegister = document.getElementById('tab-register').classList.contains('active');
+    const role = document.querySelector('input[name="role"]:checked');
+    const roleLabel = role && role.value === 'mmiliki' ? 'Mmiliki' : 'Mwanafunzi';
+
+    showToast(isRegister
+      ? `Akaunti imefunguliwa kama ${roleLabel} — (prototype, hakuna data inayohifadhiwa).`
+      : 'Umeingia kikamilifu — (prototype, hakuna data inayohifadhiwa).');
+
+    setTimeout(()=>{ window.location.href = 'index.html'; }, 1400);
+  }
+
+  let toastTimer;
+  function showToast(msg){
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(()=>t.classList.remove('show'), 3200);
+  }
+</script>
+</body>
+</html>

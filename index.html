@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KaaNjiro — Pata chumba, kaa karibu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --forest:#1F4D3A;
+    --forest-dark:#153529;
+    --gold:#D4A24C;
+    --gold-dark:#B0813A;
+    --soil:#B5533C;
+    --cream:#FAF6EE;
+    --sage:#E8EDE4;
+    --ink:#26231F;
+    --ink-soft:#5B584F;
+    --line:#DAD3C2;
+    --white:#FFFFFF;
+    --radius:14px;
+    --shadow: 0 8px 24px rgba(31,77,58,0.08);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--cream);
+    color:var(--ink);
+    font-family:'Inter', sans-serif;
+    font-size:16px;
+    line-height:1.5;
+  }
+  h1,h2,h3,.display{
+    font-family:'Space Grotesk', sans-serif;
+    color:var(--forest-dark);
+    margin:0;
+  }
+  .mono{ font-family:'IBM Plex Mono', monospace; }
+  a{color:inherit;}
+  button{font-family:inherit; cursor:pointer;}
+  img{max-width:100%; display:block;}
+  :focus-visible{ outline:3px solid var(--gold); outline-offset:2px; }
+  @media (prefers-reduced-motion: reduce){
+    *{ animation:none !important; transition:none !important; }
+  }
+
+  /* ---------- Layout shells ---------- */
+  .wrap{max-width:1160px; margin:0 auto; padding:0 24px;}
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:12px 22px; border-radius:999px; border:none;
+    font-weight:600; font-size:0.95rem; transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .btn:hover{ transform:translateY(-1px); }
+  .btn-primary{ background:var(--gold); color:var(--forest-dark); box-shadow:0 4px 14px rgba(212,162,76,0.35);}
+  .btn-primary:hover{ background:var(--gold-dark); }
+  .btn-outline{ background:transparent; border:1.5px solid var(--forest); color:var(--forest);}
+  .btn-outline:hover{ background:var(--forest); color:var(--white);}
+  .btn-ghost{ background:transparent; color:var(--forest-dark); padding:10px 14px;}
+  .btn-block{ width:100%; justify-content:center; }
+
+  /* ---------- Header ---------- */
+  header{
+    position:sticky; top:0; z-index:40;
+    background:rgba(250,246,238,0.92); backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{ display:flex; align-items:center; justify-content:space-between; padding:16px 0;}
+  .logo{ display:flex; align-items:center; gap:10px; font-family:'Space Grotesk'; font-weight:700; font-size:1.25rem; color:var(--forest-dark);}
+  .logo-mark{
+    width:34px; height:34px; border-radius:9px;
+    background:linear-gradient(155deg, var(--forest) 55%, var(--gold) 55%);
+    position:relative; flex-shrink:0;
+  }
+  .logo-mark::after{
+    content:""; position:absolute; inset:9px; border:2px solid var(--cream);
+    border-bottom:none; border-radius:3px 3px 0 0;
+  }
+  .navlinks{ display:flex; align-items:center; gap:6px; }
+  .navlinks button.link{ background:none; border:none; padding:10px 14px; font-weight:500; color:var(--ink-soft); border-radius:8px; }
+  .navlinks button.link:hover{ background:var(--sage); color:var(--forest-dark); }
+
+  /* ---------- Hero ---------- */
+  .hero{ padding:64px 0 32px; }
+  .hero-grid{ display:grid; grid-template-columns:1.1fr 0.9fr; gap:48px; align-items:center; }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:'IBM Plex Mono'; font-size:0.78rem; letter-spacing:.04em;
+    color:var(--soil); background:#F3E3DD; padding:6px 12px; border-radius:999px; margin-bottom:18px;
+  }
+  .eyebrow .dot{ width:6px; height:6px; border-radius:50%; background:var(--soil); }
+  h1.hero-title{ font-size:2.7rem; line-height:1.08; font-weight:700; letter-spacing:-0.01em; }
+  h1.hero-title em{ font-style:normal; color:var(--soil); }
+  .hero-sub{ color:var(--ink-soft); font-size:1.08rem; margin:18px 0 28px; max-width:46ch;}
+  .hero-actions{ display:flex; gap:14px; }
+
+  .route-illustration{
+    position:relative; background:var(--forest); border-radius:20px; padding:26px;
+    color:var(--cream); overflow:hidden; min-height:340px; display:flex; flex-direction:column; justify-content:space-between;
+  }
+  .route-illustration::before{
+    content:""; position:absolute; right:-40px; top:-40px; width:180px; height:180px;
+    background:radial-gradient(circle, rgba(212,162,76,0.35), transparent 70%);
+  }
+  .route-card-top{ display:flex; justify-content:space-between; align-items:flex-start; position:relative; z-index:1;}
+  .route-card-top .campus{ font-family:'Space Grotesk'; font-weight:600; }
+  .route-path{ position:relative; margin:18px 0; z-index:1; }
+  .route-line{
+    height:2px; background-image:linear-gradient(to right, var(--gold) 60%, transparent 0%);
+    background-size:10px 2px; background-repeat:repeat-x; margin:14px 0;
+  }
+  .route-stop{ display:flex; align-items:center; gap:10px; font-size:0.92rem; }
+  .route-stop .pin{ width:9px; height:9px; border-radius:50%; background:var(--gold); flex-shrink:0; box-shadow:0 0 0 4px rgba(212,162,76,0.25);}
+  .route-stop.dim{ opacity:.65; }
+  .route-badge{
+    position:relative; z-index:1; align-self:flex-start;
+    background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.18);
+    padding:10px 16px; border-radius:12px; font-family:'IBM Plex Mono'; font-size:0.85rem;
+  }
+  .route-badge b{ color:var(--gold); font-size:1.15rem; }
+
+  /* ---------- Stats strip ---------- */
+  .stats{ display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:14px; overflow:hidden; margin:40px 0 8px;}
+  .stat{ background:var(--white); padding:22px 24px; }
+  .stat b{ display:block; font-family:'Space Grotesk'; font-size:1.6rem; color:var(--forest-dark);}
+  .stat span{ color:var(--ink-soft); font-size:0.88rem; }
+
+  /* ---------- Search panel ---------- */
+  .search-panel{
+    background:var(--white); border:1px solid var(--line); border-radius:var(--radius);
+    padding:20px; margin-top:40px; box-shadow:var(--shadow);
+    display:grid; grid-template-columns:1.3fr 1fr 1fr 1fr auto; gap:14px; align-items:end;
+  }
+  .field label{ display:block; font-size:0.78rem; font-weight:600; color:var(--ink-soft); margin-bottom:6px; text-transform:uppercase; letter-spacing:.03em;}
+  .field select, .field input{
+    width:100%; padding:11px 12px; border-radius:9px; border:1px solid var(--line);
+    background:var(--cream); font-family:inherit; font-size:0.95rem; color:var(--ink);
+  }
+  .field select:focus, .field input:focus{ border-color:var(--forest); background:var(--white); }
+
+  /* ---------- Listings section ---------- */
+  .section{ padding:56px 0; }
+  .section-head{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:22px; }
+  .section-head h2{ font-size:1.5rem; }
+  .result-count{ color:var(--ink-soft); font-size:0.92rem; }
+
+  .listings-layout{ display:grid; grid-template-columns:230px 1fr; gap:28px; align-items:start; }
+  .filters{ background:var(--white); border:1px solid var(--line); border-radius:var(--radius); padding:20px; position:sticky; top:90px; }
+  .filters h3{ font-size:0.95rem; margin-bottom:14px; }
+  .filter-group{ margin-bottom:18px; }
+  .filter-group legend{ font-size:0.78rem; font-weight:600; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.03em; margin-bottom:8px;}
+  .chip-row{ display:flex; flex-wrap:wrap; gap:6px; }
+  .chip{
+    border:1px solid var(--line); background:var(--cream); border-radius:999px;
+    padding:6px 12px; font-size:0.82rem; color:var(--ink-soft); user-select:none;
+  }
+  .chip input{ display:none; }
+  .chip.active, .chip:has(input:checked){ background:var(--forest); color:var(--white); border-color:var(--forest); }
+
+  .grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:20px; }
+  .card{
+    background:var(--white); border:1px solid var(--line); border-radius:var(--radius);
+    overflow:hidden; box-shadow:var(--shadow); display:flex; flex-direction:column;
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .card:hover{ transform:translateY(-3px); box-shadow:0 14px 28px rgba(31,77,58,0.14); }
+  .card-art{
+    height:140px; position:relative; display:flex; align-items:flex-end; padding:12px;
+  }
+  .card-art .badge-verified{
+    position:absolute; top:10px; left:10px; background:rgba(255,255,255,0.92); color:var(--forest-dark);
+    font-size:0.72rem; font-weight:600; padding:4px 9px; border-radius:999px; display:flex; align-items:center; gap:5px;
+  }
+  .card-art .badge-verified::before{ content:"✓"; color:var(--forest); font-weight:700; }
+  .card-art .price-tag{
+    background:var(--ink); color:var(--cream); font-family:'IBM Plex Mono'; font-size:0.82rem;
+    padding:6px 10px; border-radius:8px; margin-left:auto;
+  }
+  .card-body{ padding:16px; display:flex; flex-direction:column; gap:10px; flex:1; }
+  .card-body h3{ font-size:1.05rem; }
+  .card-loc{ color:var(--ink-soft); font-size:0.85rem; display:flex; align-items:center; gap:6px; }
+  .mini-route{
+    display:flex; align-items:center; gap:6px; font-family:'IBM Plex Mono'; font-size:0.78rem;
+    color:var(--soil); background:#F6EAE5; padding:6px 10px; border-radius:8px; width:fit-content;
+  }
+  .mini-route .foot{ letter-spacing:2px; }
+  .card-foot{ display:flex; gap:8px; margin-top:auto; padding-top:6px; }
+  .card-foot .btn{ flex:1; padding:9px 12px; font-size:0.85rem; }
+
+  /* Art gradients per room "type" as illustrated placeholders (no stock photos) */
+  .art-1{ background:linear-gradient(135deg,#2B5F46,#1F4D3A); }
+  .art-2{ background:linear-gradient(135deg,#C98A3E,#B0813A); }
+  .art-3{ background:linear-gradient(135deg,#8B4B3B,#B5533C); }
+  .art-4{ background:linear-gradient(135deg,#3C6E58,#2B5F46); }
+  .art-5{ background:linear-gradient(135deg,#D4A24C,#C98A3E); }
+  .art-6{ background:linear-gradient(135deg,#4C7C63,#3C6E58); }
+
+  .empty-state{
+    text-align:center; padding:60px 20px; background:var(--white); border:1px dashed var(--line); border-radius:var(--radius);
+  }
+  .empty-state h3{ margin-bottom:6px; }
+  .empty-state p{ color:var(--ink-soft); margin:0 0 16px; }
+
+  /* ---------- How it works ---------- */
+  .steps{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+  .step{ background:var(--white); border:1px solid var(--line); border-radius:var(--radius); padding:22px; }
+  .step .num{ font-family:'IBM Plex Mono'; color:var(--soil); font-size:0.85rem; margin-bottom:10px; display:block;}
+  .step h3{ font-size:1.05rem; margin-bottom:8px; }
+  .step p{ color:var(--ink-soft); font-size:0.92rem; margin:0; }
+
+  /* ---------- Landlord CTA band ---------- */
+  .cta-band{
+    background:var(--forest); color:var(--cream); border-radius:20px; padding:44px;
+    display:flex; justify-content:space-between; align-items:center; gap:24px;
+  }
+  .cta-band h2{ color:var(--cream); font-size:1.6rem; margin-bottom:8px; }
+  .cta-band p{ color:#CFE0D6; max-width:44ch; margin:0; }
+
+  /* ---------- Footer ---------- */
+  footer{ border-top:1px solid var(--line); padding:36px 0 28px; margin-top:20px; }
+  .foot-grid{ display:flex; justify-content:space-between; flex-wrap:wrap; gap:20px; color:var(--ink-soft); font-size:0.88rem;}
+  .foot-grid b{ color:var(--forest-dark); }
+
+  /* ---------- Modal ---------- */
+  .overlay{
+    position:fixed; inset:0; background:rgba(38,35,31,0.55); display:none;
+    align-items:center; justify-content:center; z-index:100; padding:20px;
+  }
+  .overlay.open{ display:flex; }
+  .modal{
+    background:var(--white); border-radius:18px; width:100%; max-width:560px;
+    max-height:88vh; overflow-y:auto; padding:0; position:relative;
+  }
+  .modal-header{
+    display:flex; justify-content:space-between; align-items:center; padding:20px 24px;
+    border-bottom:1px solid var(--line); position:sticky; top:0; background:var(--white); z-index:2;
+  }
+  .modal-header h2{ font-size:1.2rem; }
+  .modal-close{ background:none; border:none; font-size:1.3rem; color:var(--ink-soft); line-height:1; padding:4px; }
+  .modal-body{ padding:22px 24px 26px; }
+
+  .detail-art{ height:200px; border-radius:12px; margin-bottom:18px; position:relative; }
+  .detail-price{ font-family:'IBM Plex Mono'; font-size:1.4rem; color:var(--forest-dark); font-weight:600; }
+  .detail-meta{ color:var(--ink-soft); font-size:0.92rem; margin:6px 0 16px; }
+  .amenities{ display:flex; flex-wrap:wrap; gap:8px; margin:14px 0; }
+  .amenity{ background:var(--sage); border-radius:999px; padding:6px 12px; font-size:0.82rem; color:var(--forest-dark);}
+  .landlord-box{
+    display:flex; align-items:center; gap:12px; background:var(--cream); border:1px solid var(--line);
+    border-radius:12px; padding:14px; margin-top:18px;
+  }
+  .avatar{ width:42px; height:42px; border-radius:50%; background:var(--gold); flex-shrink:0; display:flex; align-items:center; justify-content:center; font-family:'Space Grotesk'; font-weight:700; color:var(--forest-dark); }
+  .landlord-box .name{ font-weight:600; font-size:0.95rem; }
+  .landlord-box .tag{ font-size:0.8rem; color:var(--ink-soft); }
+
+  form .field{ margin-bottom:14px; }
+  .form-row{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  textarea{ width:100%; padding:11px 12px; border-radius:9px; border:1px solid var(--line); background:var(--cream); font-family:inherit; resize:vertical; min-height:80px; }
+  .tabs{ display:flex; gap:4px; background:var(--sage); padding:4px; border-radius:10px; margin-bottom:18px; }
+  .tab{ flex:1; text-align:center; padding:9px; border:none; background:transparent; border-radius:8px; font-weight:600; color:var(--ink-soft); font-size:0.88rem; }
+  .tab.active{ background:var(--white); color:var(--forest-dark); box-shadow:0 2px 6px rgba(0,0,0,0.06); }
+  .role-toggle{ display:flex; gap:10px; margin-bottom:16px; }
+  .role-opt{ flex:1; border:1.5px solid var(--line); border-radius:10px; padding:12px; text-align:center; font-size:0.88rem; }
+  .role-opt input{ display:none; }
+  .role-opt:has(input:checked){ border-color:var(--forest); background:var(--sage); color:var(--forest-dark); font-weight:600; }
+
+  /* Toast */
+  .toast{
+    position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px);
+    background:var(--forest-dark); color:var(--cream); padding:14px 22px; border-radius:999px;
+    font-size:0.9rem; opacity:0; transition:opacity .25s ease, transform .25s ease; z-index:200; pointer-events:none;
+    display:flex; align-items:center; gap:8px;
+  }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+  @media (max-width: 900px){
+    .hero-grid{ grid-template-columns:1fr; }
+    .search-panel{ grid-template-columns:1fr 1fr; }
+    .search-panel .btn{ grid-column:1 / -1; }
+    .listings-layout{ grid-template-columns:1fr; }
+    .filters{ position:static; }
+    .grid{ grid-template-columns:repeat(2,1fr); }
+    .stats{ grid-template-columns:1fr; }
+    .cta-band{ flex-direction:column; text-align:center; }
+  }
+  @media (max-width: 560px){
+    .grid{ grid-template-columns:1fr; }
+    .navlinks{ display:none; }
+    h1.hero-title{ font-size:2rem; }
+    .search-panel{ grid-template-columns:1fr; }
+    .steps{ grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <div class="logo"><span class="logo-mark"></span>KaaNjiro</div>
+    <nav class="navlinks">
+      <button class="link" onclick="scrollToId('listings')">Tafuta vyumba</button>
+      <button class="link" onclick="scrollToId('jinsi-inavyofanya')">Jinsi inavyofanya kazi</button>
+      <button class="link" onclick="openModal('modal-post')">Kwa wamiliki</button>
+      <a class="btn btn-outline" href="login.html">Ingia / Jisajili</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="eyebrow"><span class="dot"></span> IAA · Njiro, Arusha</span>
+        <h1 class="hero-title">Pata chumba Njiro <em>bila kuzunguka</em> mji.</h1>
+        <p class="hero-sub">Tafuta, linganisha na wasiliana na wamiliki wa vyumba karibu na IAA — bei, mahali na muda wa kutembea vinaonekana kabla hujatoka chumbani.</p>
+        <div class="hero-actions">
+          <button class="btn btn-primary" onclick="scrollToId('listings')">Anza kutafuta</button>
+          <button class="btn btn-outline" onclick="openModal('modal-post')">Nina chumba cha kupangisha</button>
+        </div>
+      </div>
+
+      <div class="route-illustration">
+        <div class="route-card-top">
+          <div>
+            <div style="font-size:.78rem; opacity:.75;">Njia ya kutembea</div>
+            <div class="campus">Kwenda IAA Campus</div>
+          </div>
+          <div class="route-badge">dakika <b>12</b></div>
+        </div>
+        <div class="route-path">
+          <div class="route-stop"><span class="pin"></span> Chumba — Njiro B</div>
+          <div class="route-line"></div>
+          <div class="route-stop dim"><span class="pin" style="background:rgba(255,255,255,.5); box-shadow:none;"></span> Kimandolu Junction</div>
+          <div class="route-line"></div>
+          <div class="route-stop"><span class="pin"></span> IAA — Lango kuu</div>
+        </div>
+        <div style="font-size:.82rem; opacity:.8; position:relative; z-index:1;">Kila tangazo linaonyesha muda halisi wa kutembea, si makadirio ya jumla.</div>
+      </div>
+    </div>
+
+    <div class="wrap stats">
+      <div class="stat"><b>128</b><span>vyumba vilivyoorodheshwa Njiro</span></div>
+      <div class="stat"><b>73%</b><span>ya wamiliki wamethibitishwa</span></div>
+      <div class="stat"><b>9 dk</b><span>wastani wa kutembea kwenda IAA</span></div>
+    </div>
+  </section>
+
+  <!-- LISTINGS -->
+  <section class="section" id="listings">
+    <div class="wrap">
+      <div class="search-panel">
+        <div class="field">
+          <label for="f-area">Eneo</label>
+          <select id="f-area" onchange="applyFilters()">
+            <option value="">Maeneo yote</option>
+            <option>Njiro B</option>
+            <option>Kimandolu</option>
+            <option>Elerai</option>
+            <option>Sombetini</option>
+            <option>Sekei</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="f-price">Bei (kwa mwezi)</label>
+          <select id="f-price" onchange="applyFilters()">
+            <option value="">Bei yoyote</option>
+            <option value="0-60000">Chini ya 60,000</option>
+            <option value="60000-100000">60,000 – 100,000</option>
+            <option value="100000-99999999">Zaidi ya 100,000</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="f-type">Aina</label>
+          <select id="f-type" onchange="applyFilters()">
+            <option value="">Aina yoyote</option>
+            <option>Single</option>
+            <option>Self-contained</option>
+            <option>Shared</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="f-walk">Umbali (kutembea)</label>
+          <select id="f-walk" onchange="applyFilters()">
+            <option value="">Umbali wowote</option>
+            <option value="10">Chini ya dakika 10</option>
+            <option value="15">Chini ya dakika 15</option>
+            <option value="9999">Yoyote</option>
+          </select>
+        </div>
+        <button class="btn btn-primary" onclick="applyFilters()">Chuja</button>
+      </div>
+
+      <div class="section-head" style="margin-top:36px;">
+        <h2>Vyumba karibu na IAA</h2>
+        <span class="result-count" id="result-count">— matokeo</span>
+      </div>
+
+      <div class="listings-layout">
+        <aside class="filters">
+          <h3>Chuja zaidi</h3>
+          <div class="filter-group">
+            <legend>Uthibitisho</legend>
+            <label class="chip"><input type="checkbox" id="f-verified" onchange="applyFilters()"> Wamiliki waliothibitishwa tu</label>
+          </div>
+          <div class="filter-group">
+            <legend>Huduma</legend>
+            <div class="chip-row">
+              <label class="chip"><input type="checkbox" class="amenity-filter" value="WiFi" onchange="applyFilters()"> WiFi</label>
+              <label class="chip"><input type="checkbox" class="amenity-filter" value="Maji 24/7" onchange="applyFilters()"> Maji 24/7</label>
+              <label class="chip"><input type="checkbox" class="amenity-filter" value="Umeme" onchange="applyFilters()"> Umeme</label>
+              <label class="chip"><input type="checkbox" class="amenity-filter" value="Usalama" onchange="applyFilters()"> Ulinzi</label>
+            </div>
+          </div>
+          <button class="btn btn-ghost btn-block" onclick="resetFilters()">Futa vichujio</button>
+        </aside>
+
+        <div id="grid" class="grid"><!-- rooms injected by JS --></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="section" id="jinsi-inavyofanya" style="background:var(--sage);">
+    <div class="wrap">
+      <div class="section-head"><h2>Jinsi KaaNjiro inavyofanya kazi</h2></div>
+      <div class="steps">
+        <div class="step"><span class="num">01</span><h3>Tafuta na uchuje</h3><p>Chagua eneo, bei na umbali wa kutembea kwenda IAA — matokeo yanaonekana papo hapo.</p></div>
+        <div class="step"><span class="num">02</span><h3>Linganisha vyumba</h3><p>Angalia picha, bei, huduma na maoni kabla hujapanga safari ya kwenda kuangalia chumba.</p></div>
+        <div class="step"><span class="num">03</span><h3>Wasiliana moja kwa moja</h3><p>Piga simu au tuma ujumbe kwa mmiliki aliyethibitishwa — hakuna wakala wa kati.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LANDLORD CTA -->
+  <section class="section">
+    <div class="wrap">
+      <div class="cta-band">
+        <div>
+          <h2>Una chumba cha kupangisha Njiro?</h2>
+          <p>Weka tangazo lako mbele ya wanafunzi wanaotafuta chumba sasa hivi — bure kwa awamu hii ya majaribio.</p>
+        </div>
+        <button class="btn btn-primary" onclick="openModal('modal-post')">Chapisha tangazo</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot-grid">
+    <div><b>KaaNjiro</b><br>Mfumo wa kidijitali wa kutafuta malazi ya wanafunzi, Njiro — Arusha.</div>
+    <div>Mradi wa: <b>Software Design (CYU 07212)</b><br>Institute of Accountancy Arusha — BCSE</div>
+    <div>Hii ni prototype ya kufundishia. Data zote ni mfano tu.</div>
+  </div>
+</footer>
+
+<!-- ROOM DETAIL MODAL -->
+<div class="overlay" id="modal-detail" onclick="closeOnOverlay(event,'modal-detail')">
+  <div class="modal">
+    <div class="modal-header"><h2>Maelezo ya chumba</h2><button class="modal-close" onclick="closeModal('modal-detail')">✕</button></div>
+    <div class="modal-body" id="detail-content"><!-- injected --></div>
+  </div>
+</div>
+
+<!-- POST ROOM MODAL -->
+<div class="overlay" id="modal-post" onclick="closeOnOverlay(event,'modal-post')">
+  <div class="modal">
+    <div class="modal-header"><h2>Chapisha tangazo la chumba</h2><button class="modal-close" onclick="closeModal('modal-post')">✕</button></div>
+    <div class="modal-body">
+      <form id="post-form" onsubmit="handlePostRoom(event)">
+        <div class="field"><label for="p-title">Jina la chumba</label><input id="p-title" required placeholder="Mfano: Single Room — Njiro B"></div>
+        <div class="form-row">
+          <div class="field"><label for="p-area">Eneo</label>
+            <select id="p-area" required>
+              <option>Njiro B</option><option>Kimandolu</option><option>Elerai</option><option>Sombetini</option><option>Sekei</option>
+            </select>
+          </div>
+          <div class="field"><label for="p-price">Bei (TZS/mwezi)</label><input id="p-price" type="number" min="0" required placeholder="70000"></div>
+        </div>
+        <div class="form-row">
+          <div class="field"><label for="p-type">Aina ya chumba</label>
+            <select id="p-type"><option>Single</option><option>Self-contained</option><option>Shared</option></select>
+          </div>
+          <div class="field"><label for="p-walk">Dakika za kutembea kwenda IAA</label><input id="p-walk" type="number" min="1" required placeholder="12"></div>
+        </div>
+        <div class="field"><label for="p-desc">Maelezo mafupi</label><textarea id="p-desc" placeholder="Eleza kuhusu chumba, mazingira na huduma..."></textarea></div>
+        <div class="field"><label for="p-phone">Namba ya simu ya mmiliki</label><input id="p-phone" type="tel" required placeholder="07XX XXX XXX"></div>
+        <div class="field"><label>Picha ya chumba (hiari — prototype haihifadhi faili)</label><input type="file" accept="image/*"></div>
+        <button class="btn btn-primary btn-block" type="submit">Chapisha tangazo</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  /* ---------------- Mock data (in-memory only, no storage APIs) ---------------- */
+  let rooms = [
+    { id:1, title:"Single Room — Njiro B", area:"Njiro B", price:55000, type:"Single", walk:8, verified:true,
+      amenities:["WiFi","Maji 24/7"], art:"art-1",
+      desc:"Chumba kidogo na safi, karibu na kituo cha daladala Njiro B. Kinafaa kwa mwanafunzi mmoja.",
+      landlord:"Mama Rehema", phone:"0712 345 678" },
+    { id:2, title:"Self-contained — Kimandolu", area:"Kimandolu", price:120000, type:"Self-contained", walk:14, verified:true,
+      amenities:["WiFi","Umeme","Usalama"], art:"art-2",
+      desc:"Chumba binafsi chenye bafu na jiko dogo la ndani. Uzio wa usalama na mlinzi wa usiku.",
+      landlord:"Mzee Kombo", phone:"0754 112 233" },
+    { id:3, title:"Shared Room — Elerai", area:"Elerai", price:40000, type:"Shared", walk:20, verified:false,
+      amenities:["Maji 24/7"], art:"art-3",
+      desc:"Chumba cha kushirikiana na mwanafunzi mwingine, gharama nafuu zaidi eneo la Elerai.",
+      landlord:"Baba Juma", phone:"0788 900 112" },
+    { id:4, title:"Single Room — Sombetini", area:"Sombetini", price:65000, type:"Single", walk:11, verified:true,
+      amenities:["WiFi","Usalama"], art:"art-4",
+      desc:"Chumba tulivu mbali kidogo na kelele za mjini, njia nzuri ya kutembea kwenda IAA.",
+      landlord:"Dada Neema", phone:"0765 224 981" },
+    { id:5, title:"Self-contained — Sekei", area:"Sekei", price:95000, type:"Self-contained", walk:17, verified:false,
+      amenities:["WiFi","Maji 24/7","Umeme"], art:"art-5",
+      desc:"Nyumba ndogo ya kujitegemea, jikoni na choo cha ndani, karibu na soko la Sekei.",
+      landlord:"Ndugu Athumani", phone:"0713 556 789" },
+    { id:6, title:"Single Room — Njiro B (Kiwanja)", area:"Njiro B", price:50000, type:"Single", walk:6, verified:true,
+      amenities:["Maji 24/7","Usalama"], art:"art-6",
+      desc:"Chumba kilicho karibu zaidi na lango la IAA, dakika chache tu kwa mguu.",
+      landlord:"Mama Aisha", phone:"0622 334 556" },
+  ];
+
+  let editableState = { area:"", priceRange:"", type:"", walk:"", verifiedOnly:false, amenities:[] };
+
+  function fmtTZS(n){ return n.toLocaleString('en-US') + " TZS"; }
+
+  function roomCardHTML(r){
+    return `
+      <article class="card">
+        <div class="card-art ${r.art}">
+          ${r.verified ? '<span class="badge-verified">Amethibitishwa</span>' : ''}
+          <span class="price-tag mono">${fmtTZS(r.price)}</span>
+        </div>
+        <div class="card-body">
+          <h3>${r.title}</h3>
+          <div class="card-loc">📍 ${r.area} · ${r.type}</div>
+          <div class="mini-route"><span class="foot">···</span> dakika ${r.walk} kwenda IAA</div>
+          <div class="card-foot">
+            <button class="btn btn-outline" onclick="openDetail(${r.id})">Angalia zaidi</button>
+            <button class="btn btn-primary" onclick="openDetail(${r.id})">Wasiliana</button>
+          </div>
+        </div>
+      </article>`;
+  }
+
+  function renderGrid(list){
+    const grid = document.getElementById('grid');
+    document.getElementById('result-count').textContent = list.length + " matokeo";
+    if(list.length === 0){
+      grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;">
+        <h3>Hakuna chumba kinachokidhi vichujio hivi</h3>
+        <p>Jaribu kupunguza vichujio, au angalia maeneo mengine karibu na Njiro.</p>
+        <button class="btn btn-outline" onclick="resetFilters()">Futa vichujio vyote</button>
+      </div>`;
+      return;
+    }
+    grid.innerHTML = list.map(roomCardHTML).join('');
+  }
+
+  function applyFilters(){
+    const area = document.getElementById('f-area').value;
+    const priceRange = document.getElementById('f-price').value;
+    const type = document.getElementById('f-type').value;
+    const walk = document.getElementById('f-walk').value;
+    const verifiedOnly = document.getElementById('f-verified').checked;
+    const amenityChecks = Array.from(document.querySelectorAll('.amenity-filter:checked')).map(c=>c.value);
+
+    let list = rooms.filter(r=>{
+      if(area && r.area !== area) return false;
+      if(type && r.type !== type) return false;
+      if(verifiedOnly && !r.verified) return false;
+      if(walk && r.walk > Number(walk)) return false;
+      if(priceRange){
+        const [min,max] = priceRange.split('-').map(Number);
+        if(r.price < min || r.price > max) return false;
+      }
+      if(amenityChecks.length && !amenityChecks.every(a => r.amenities.includes(a))) return false;
+      return true;
+    });
+    renderGrid(list);
+  }
+
+  function resetFilters(){
+    document.getElementById('f-area').value = "";
+    document.getElementById('f-price').value = "";
+    document.getElementById('f-type').value = "";
+    document.getElementById('f-walk').value = "";
+    document.getElementById('f-verified').checked = false;
+    document.querySelectorAll('.amenity-filter').forEach(c=>c.checked=false);
+    renderGrid(rooms);
+  }
+
+  function openDetail(id){
+    const r = rooms.find(x=>x.id===id);
+    if(!r) return;
+    document.getElementById('detail-content').innerHTML = `
+      <div class="detail-art ${r.art}"></div>
+      <h2>${r.title}</h2>
+      <div class="detail-price">${fmtTZS(r.price)} <span style="font-size:.9rem; color:var(--ink-soft); font-weight:400;">/ mwezi</span></div>
+      <div class="detail-meta">📍 ${r.area} · ${r.type} · <span class="mono">dakika ${r.walk} kwenda IAA</span></div>
+      <p>${r.desc}</p>
+      <div class="amenities">${r.amenities.map(a=>`<span class="amenity">${a}</span>`).join('')}</div>
+      <div class="landlord-box">
+        <div class="avatar">${r.landlord.charAt(0)}</div>
+        <div>
+          <div class="name">${r.landlord} ${r.verified ? '· ✓ Amethibitishwa' : ''}</div>
+          <div class="tag">Mmiliki wa chumba</div>
+        </div>
+      </div>
+      <button class="btn btn-primary btn-block" style="margin-top:18px;" onclick="showToast('Namba: ${r.phone} — piga au tuma WhatsApp')">📞 Wasiliana na Mmiliki</button>
+    `;
+    openModal('modal-detail');
+  }
+
+  function handlePostRoom(e){
+    e.preventDefault();
+    const newRoom = {
+      id: rooms.length ? Math.max(...rooms.map(r=>r.id))+1 : 1,
+      title: document.getElementById('p-title').value,
+      area: document.getElementById('p-area').value,
+      price: Number(document.getElementById('p-price').value),
+      type: document.getElementById('p-type').value,
+      walk: Number(document.getElementById('p-walk').value),
+      verified: false,
+      amenities: [],
+      art: "art-" + ((rooms.length % 6) + 1),
+      desc: document.getElementById('p-desc').value || "Hakuna maelezo ya ziada yaliyotolewa na mmiliki.",
+      landlord: "Mmiliki mpya",
+      phone: document.getElementById('p-phone').value,
+    };
+    rooms.unshift(newRoom);
+    document.getElementById('post-form').reset();
+    closeModal('modal-post');
+    renderGrid(rooms);
+    scrollToId('listings');
+    showToast('Tangazo lako limechapishwa — sasa linaonekana kwenye orodha.');
+  }
+
+  function openModal(id){ document.getElementById(id).classList.add('open'); }
+  function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+  function closeOnOverlay(e,id){ if(e.target.id===id) closeModal(id); }
+  function scrollToId(id){ document.getElementById(id).scrollIntoView({behavior:'smooth'}); }
+
+  let toastTimer;
+  function showToast(msg){
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(()=>t.classList.remove('show'), 3200);
+  }
+
+  // init
+  renderGrid(rooms);
+</script>
+</body>
+</html>
